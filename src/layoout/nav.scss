@@ -1,0 +1,12 @@
+@import "../styles/_variables.scss";
+
+.nav-item {
+    .nav-link {
+        color: $text-main
+    }
+
+    .active {
+        background-color: $primary;
+        color: $text-main;  
+    }
+}
