@@ -7,8 +7,10 @@ interface Props {
 export default function MainLayout({ children }: Props) {
   return (
     <>
-      <Navbar />
+    <Navbar />
       <main className="col-span-3 h-full py-4 px-3">{children}</main>
     </>
+
+    
   );
 }
