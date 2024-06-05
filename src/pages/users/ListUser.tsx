@@ -1,18 +1,31 @@
 import { getUsers } from "../../services/user.service";
 import { useQueryParams } from "../../hooks/hook";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 
 function ListUser() {
   let param = useQueryParams();
   let page = Number(param.page) | 1;
 
-  let { data } = useQuery({
+  let { data, isLoading } = useQuery({
     queryKey: ["users", page],
     queryFn: () => getUsers(page, 10),
+    staleTime: 60 * 1000,
+    // cacheTime : thoi gian data dc luu
+    gcTime: 10 * 1000,
+    // giu lai data cu != undefined
+    placeholderData: keepPreviousData,
   });
+
+  console.log(isLoading);
 
   return (
     <div className="card">
+      <div className="p-3">
+        <Link to="/users/add" className="btn btn-primary">
+          + Add user
+        </Link>
+      </div>
       <div className="card-body">
         <table className="table">
           <thead>

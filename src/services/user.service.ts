@@ -2,7 +2,7 @@
 
 import http from "../api/http";
 
-import { IListUser } from "../interface/user.interface";
+import { IListUser, IUser } from "../interface/user.interface";
 
 export const getUsers = (_page : number | string, _limit : number | string) => {
     return http.get<IListUser>('/users', {
@@ -11,4 +11,9 @@ export const getUsers = (_page : number | string, _limit : number | string) => {
             _limit: _limit
          }
     })
+}
+
+export const AddUserService = (data : Omit<IUser, 'id'>) => {
+    return http.post<IUser>('/users', data)
+
 }
