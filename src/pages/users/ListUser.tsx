@@ -1,23 +1,34 @@
-import { getUsers } from "../../services/user.service";
+import { DelUserService, getUsers } from "../../services/user.service";
 import { useQueryParams } from "../../hooks/hook";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
+import Pagination from "../../components/pagination";
 
 function ListUser() {
   let param = useQueryParams();
   let page = Number(param.page) | 1;
 
-  let { data, isLoading } = useQuery({
+  console.log(param);
+
+  let { data } = useQuery({
     queryKey: ["users", page],
     queryFn: () => getUsers(page, 10),
-    staleTime: 60 * 1000,
-    // cacheTime : thoi gian data dc luu
-    gcTime: 10 * 1000,
-    // giu lai data cu != undefined
-    placeholderData: keepPreviousData,
   });
 
-  console.log(isLoading);
+  const handleDelUserQuery = useMutation({
+    mutationFn: (id: number | string) => DelUserService(id),
+    onSuccess: (_, id) => {
+      console.log(id);
+    },
+  });
+
+  const delUser = (id: number) => {
+    handleDelUserQuery.mutate(id);
+  };
+
+  const totalUser = Number(data?.headers["x-total-count"] || 0);
+  const totalPage = Math.ceil(totalUser / 10);
+  console.log(totalUser, totalPage);
 
   return (
     <div className="card">
@@ -51,12 +62,21 @@ function ListUser() {
                     <button type="button" className="btn btn-primary">
                       Detail
                     </button>
+                    <button
+                      type="button"
+                      className="btn btn-primary ms-3"
+                      onClick={() => delUser(user.id)}
+                    >
+                      Detail
+                    </button>
                   </td>
                 </tr>
               );
             })}
           </tbody>
         </table>
+
+        <Pagination totalPage={totalPage} />
       </div>
     </div>
   );
